@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/title_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/colorBlueText"
+        >
+
+        <TextView
+            android:id="@+id/upload_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/upload"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="17sp" />
+
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/upload_camera_button"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/title_bar_layout"
+        android:background="@drawable/button_bg"
+        android:text="@string/take_photo"
+        android:textColor="@color/colorWhite"
+        android:visibility="visible"
+        android:foreground="@drawable/custom_ripple_rounded_rect"
+        />
+
+    <Button
+        android:id="@+id/upload_gallery_button"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_bg"
+        android:text="@string/gallery"
+        android:textColor="@color/colorWhite"
+        android:visibility="visible"
+        android:foreground="@drawable/custom_ripple_rounded_rect"
+        android:layout_below="@+id/upload_camera_button"
+        />
+
+</RelativeLayout>

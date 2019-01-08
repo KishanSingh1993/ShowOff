@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/title_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/colorBlueText"
+        >
+
+        <RelativeLayout
+            android:id="@+id/back_button_overlay"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/back_button"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_marginStart="15dp"
+                app:srcCompat="@drawable/white_arrow"
+                android:contentDescription="@string/app_name" />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/sign_up_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/sign_up"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="17sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@id/title_bar_layout"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPinkDull"
+        android:text="@string/talent"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:textColor="@color/colorPink"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/show_talent"
+        />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/show_talent"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/singer_cat"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/category_bg"
+                android:foreground="@drawable/custom_ripple_rounded_rect"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/singer_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="@string/singer"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorBlueCategory"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:id="@+id/singer_image_view"
+                    android:layout_width="60dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/singer"
+                    android:cropToPadding="false"
+                    android:scaleType="centerCrop" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/instruments_cat"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:foreground="@drawable/custom_ripple_rounded_rect"
+                android:background="@drawable/category_bg"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/instruments_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="@string/instruments"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorBlueCategory"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:id="@+id/instruments_image_view"
+                    android:layout_width="80dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/instruments"
+                    android:cropToPadding="false"
+                    android:scaleType="centerCrop" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/dancer_cat"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:foreground="@drawable/custom_ripple_rounded_rect"
+                android:background="@drawable/category_bg"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dancer_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="@string/dancer"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorBlueCategory"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:id="@+id/dancer_image_view"
+                    android:layout_width="60dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/dancer"
+                    android:cropToPadding="false"
+                    android:scaleType="centerCrop" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/acting_cat"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/category_bg"
+                android:foreground="@drawable/custom_ripple_rounded_rect"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/acting_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="@string/acting"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorBlueCategory"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:id="@+id/acting_image_view"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/acting"
+                    android:cropToPadding="false"
+                    android:scaleType="centerCrop" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/poems_cat"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:foreground="@drawable/custom_ripple_rounded_rect"
+                android:background="@drawable/category_bg"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/poems_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="@string/poems"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorBlueCategory"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:id="@+id/poems_image_view"
+                    android:layout_width="80dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/poems"
+                    android:cropToPadding="false"
+                    android:scaleType="centerCrop" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

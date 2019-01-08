@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "653193400555",
+    "firebase_url": "https://show-off-1cf0e.firebaseio.com",
+    "project_id": "show-off-1cf0e",
+    "storage_bucket": "show-off-1cf0e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653193400555:android:0eefa8da0eff13f1",
+        "android_client_info": {
+          "package_name": "brenda.com.showoff"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "653193400555-9df5tjdn30kldhqc3veo6jr3iv37illn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFyGzAMHfl5ruS2jAPLgbFrgshlFJGetM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/play"
+        android:icon="@drawable/home"
+        android:title="@string/home"/>
+
+    <item
+        android:id="@+id/live"
+        android:icon="@drawable/magnifying_glass"
+        android:title="@string/search"/>
+
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ccamera"
+        android:title="@string/upload"/>
+
+    <item
+        android:id="@+id/upcoming"
+        android:icon="@drawable/activity"
+        android:title="@string/activity_text"/>
+
+    <item
+        android:id="@+id/history"
+        android:icon="@drawable/settings"
+        android:title="@string/settings"/>
+
+</menu>

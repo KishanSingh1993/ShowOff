@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorPink">#ec008c</color>
+    <color name="colorBg">#032a3b</color>
+    <color name="colorBlueText">#3b97d3</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorPinkDull">#20fe5c97</color>
+    <color name="colorLightBlue">#bee5f9</color>
+    <color name="colorBlueCategory">#4595cf</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorGray">#d3d3d3</color>
+    <color name="colorLightPink">#fe5c97</color>
+
+
+    <array name="tabColors">
+        <item>@color/colorBlueText</item>
+        <item>@color/colorPink</item>
+    </array>
+
+</resources>
