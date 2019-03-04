@@ -1,13 +1,13 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">ShowOff</string>
-    <string name="fcm_message">ShowOff</string>
-    <string name="talent">Select your Talent &amp; Showoff</string>
-    <string name="home">Home</string>
-    <string name="search">Search</string>
-    <string name="upload">Upload</string>
-    <string name="save">Save</string>
-    <string name="confirm">Confirm</string>
-    <string name="bio">My life behind the camera.</string>
+    <string name="fcm_message" tools:ignore="MissingTranslation">ShowOff</string>
+    <string name="talent" tools:ignore="MissingTranslation">Select your Talent &amp; Showoff</string>
+    <string name="home" tools:ignore="MissingTranslation">Home</string>
+    <string name="search" tools:ignore="MissingTranslation">Search</string>
+    <string name="upload" tools:ignore="MissingTranslation">Upload</string>
+    <string name="save" tools:ignore="MissingTranslation">Save</string>
+    <string name="confirm" tools:ignore="MissingTranslation">Confirm</string>
+    <string name="bio" tools:ignore="MissingTranslation">My life behind the camera.</string>
     <string name="see_website">See Website</string>
     <string name="total_upvotes">Total Upvotes</string>
     <string name="total_posts">Total Posts</string>
@@ -51,5 +51,15 @@
     <string name="edit_bio">Edit Bio</string>
     <string name="edit_link">Edit Link</string>
     <string name="change_profile_pic">Change Profile Pic</string>
+    <string name="comment">Comment</string>
+    <string name="downvote">Downvote</string>
+    <string name="upvote">Upvote</string>
+    <string name="add_comment">Add Comment(Max 299 character)</string>
+    <string name="post">Post</string>
+    <string name="enter_post_description">Enter Post Description(Max 100 chracter)</string>
+    <string name="finish">Finish</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
 
 </resources>

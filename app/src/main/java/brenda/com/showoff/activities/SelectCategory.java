@@ -2,6 +2,7 @@ package brenda.com.showoff.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -49,8 +50,10 @@ public class SelectCategory extends AppCompatActivity implements View.OnClickLis
 
         ButterKnife.bind(this);
 
+
         Bundle bundle = getIntent().getExtras();
         assert bundle != null;
+
         fName = bundle.getString("fname");
         lName = bundle.getString("lname");
         userName = bundle.getString("username");
@@ -58,6 +61,11 @@ public class SelectCategory extends AppCompatActivity implements View.OnClickLis
         password = bundle.getString("password");
 
         singerLayout.setOnClickListener(this);
+        instrumentLayout.setOnClickListener(this);
+        dancerLayout.setOnClickListener(this);
+        actingLayout.setOnClickListener(this);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @SuppressLint("ResourceAsColor")

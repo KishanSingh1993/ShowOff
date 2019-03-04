@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".settings.Settings">
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
     <RelativeLayout
         android:id="@+id/title_bar_layout"
@@ -35,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Settings"
+            android:text="@string/settings"
             android:textAllCaps="true"
             android:textColor="@color/colorWhite"
             android:textSize="17sp" />
@@ -43,9 +49,107 @@
 
     </RelativeLayout>
 
+    <brenda.com.showoff.Util.RoundedImageView
+        android:id="@+id/user_rounded_image_view"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="63dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/entrant_profile_pic"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/user_rounded_image_view"
+        >
+
+    <EditText
+        android:id="@+id/bio_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/custom_border_withdrawal"
+        android:hint="@string/edit_bio"
+        android:gravity="top"
+        android:minLines="1"
+        android:paddingTop="10dp"
+        android:inputType="textCapSentences|textMultiLine"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:maxLength="99"
+        android:ellipsize="end"
+        android:textColor="@color/colorBlueText"
+        android:textColorHint="@color/colorBlack"
+        android:textSize="15sp"
+        />
 
 
-    <Button
+    <EditText
+        android:id="@+id/link_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/custom_border_withdrawal"
+        android:hint="@string/edit_link"
+        android:gravity="top"
+        android:minLines="1"
+        android:paddingTop="10dp"
+        android:inputType="textMultiLine"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:maxLength="199"
+        android:ellipsize="end"
+        android:textColor="@color/colorBlueText"
+        android:textColorHint="@color/colorBlack"
+        android:textSize="15sp"
+        />
+
+        <Button
+            android:id="@+id/finish_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/button_bg"
+            android:foreground="@drawable/custom_ripple_rounded_rect"
+            android:text="@string/finish"
+            android:textColor="@color/colorWhite"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/changepassword"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/button_bg"
+            android:foreground="@drawable/custom_ripple_rounded_rect"
+            android:textColor="@color/colorWhite"
+            android:textSize="16dp"
+            android:text="@string/change_password" />
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/button_bg"
+            android:foreground="@drawable/custom_ripple_rounded_rect"
+            android:textColor="@color/colorWhite"
+            android:textSize="16dp"
+            android:text="@string/logout" />
+
+    </LinearLayout>
+
+    <!--<Button
         android:id="@+id/changepassword"
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -95,7 +199,7 @@
         android:background="@drawable/button_bg"
         android:textColor="@color/colorWhite"
         android:textSize="16dp"
-        android:text="@string/change_profile_pic" />
+        android:text="@string/change_profile_pic" />-->
 
-
-</RelativeLayout>
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

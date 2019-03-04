@@ -90,6 +90,7 @@ public class GridListAdapter extends ArrayAdapter<PostItem> {
 
 
         final String posturl = Objects.requireNonNull(listdata).getPost_url();
+        final String postID = Objects.requireNonNull(listdata).getPost_id();
 
         if (posturl.endsWith(".png")){
 
@@ -105,6 +106,7 @@ public class GridListAdapter extends ArrayAdapter<PostItem> {
 
                     Bundle bundle = new Bundle();
                     bundle.putString("imgurl", posturl);
+                    bundle.putString("postID", postID);
 
                     Fragment imageScreen = new ImageFullScreen();
                     imageScreen.setArguments(bundle);
@@ -124,13 +126,15 @@ public class GridListAdapter extends ArrayAdapter<PostItem> {
                     dataSourceFactory, extractorsFactory, null, null);
 
             // Prepare the player with the source.
-            player.prepare(videoSource);
+            //player.prepare(videoSource);
+            player.seekTo(1);
 
             play.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Bundle bundle = new Bundle();
                     bundle.putString("imgurl", posturl);
+                    bundle.putString("postID", postID);
                     Fragment upload = new VideoFullScreen();
                     upload.setArguments(bundle);
                     FragmentTransaction ft_signup = ((Activity) context).getFragmentManager().beginTransaction(); //Initialize the fragment manager and begin the transaction.

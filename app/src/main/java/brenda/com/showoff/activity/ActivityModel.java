@@ -7,6 +7,8 @@ public class ActivityModel {
     public String imgurl;
     public String upvote;
     public String created;
+    public String userId;
+    public String postID;
 
     public ActivityModel(String fname, String lname, String imgurl, String upvote, String created) {
         this.fname = fname;
@@ -61,5 +63,11 @@ public class ActivityModel {
         this.created = created;
     }
 
+    public String getUserId() { return userId; }
 
+    public void setUserId(String userId) { this.userId = userId; }
+
+    public String getPostID() { return postID; }
+
+    public void setPostID(String postID) { this.postID = postID; }
 }

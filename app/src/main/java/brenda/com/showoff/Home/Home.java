@@ -3,6 +3,7 @@ package brenda.com.showoff.Home;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -82,6 +83,8 @@ public class Home extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.home, container, false);
 
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         //Initialize the font.
         typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/myriadpro.OTF");
 
@@ -128,10 +131,10 @@ public class Home extends Fragment {
     private void getHomeData(){
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Getting...");
+        progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiUrl.baseUrl + ApiUrl.getHome + ".php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiUrl.baseUrl + ApiUrl.getHome,
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -166,6 +169,7 @@ public class Home extends Fragment {
                                     JSONObject ob=array.getJSONObject(i);
                                     PostItem listData = new PostItem();
                                     listData.post_url = ob.getString("post_url");
+                                    listData.post_id = ob.getString("post_id");
                                     /*if (listData.post_url.endsWith(".png")){
                                         list_data.add(listData);
                                     }

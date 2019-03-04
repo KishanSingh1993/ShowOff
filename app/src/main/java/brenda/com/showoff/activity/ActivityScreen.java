@@ -3,9 +3,10 @@ package brenda.com.showoff.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,19 +45,18 @@ public class ActivityScreen extends Fragment {
     private String mParam2;
 
     private String utoken;
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private OnFragmentInteractionListener mListener;
     ArrayList<ActivityModel> postList = new ArrayList<ActivityModel>();
+    private ActivityAdapter  adapter;
     public ActivityScreen() {
         // Required empty public constructor
     }
 
-    public static ActivityScreen newInstance(String param1, String param2) {
+    public static ActivityScreen newInstance() {
         ActivityScreen fragment = new ActivityScreen();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,6 +81,7 @@ public class ActivityScreen extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         SharedPreferences tokenpref = getActivity().getSharedPreferences("login",MODE_PRIVATE);
         utoken = tokenpref.getString("token","");
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         callActivityApi();
         return view;
     }
@@ -96,10 +97,10 @@ public class ActivityScreen extends Fragment {
     private void callActivityApi(){
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Getting...");
+        progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiUrl.baseUrl + ApiUrl.activity + ".php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiUrl.baseUrl + ApiUrl.activity,
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -118,25 +119,32 @@ public class ActivityScreen extends Fragment {
                                     JSONObject ob=array.getJSONObject(i);
                                     ActivityModel listData = new ActivityModel();
 
-                                    /*listData.fname = ob.getString("first_name");
-                                    listData.lname = ob.getString("last_name");
-                                    listData.upvote = ob.getString("upvote_downvote");*/
-
-                                    /*listData.setFname(jsonObject.getString("first_name"));
-                                    listData.setLname(jsonObject.getString("last_name"));
-                                    listData.setUpvote(jsonObject.getString("upvote_downvote"));*/
-
                                     listData.fname = ob.getString("first_name");
                                     listData.upvote = ob.getString("upvote_downvote");
                                     listData.imgurl = ob.getString("post_url");
+                                    listData.userId = ob.getString("user_id");
+                                    listData.postID = ob.getString("post_id");
 
-                                    /*listData.setFname(fname);
-                                    listData.setFname(upvote);*/
+                                    /*if (listData.userId.matches("6")){
+
+                                        postList.remove(i);
+                                    }
+                                    else {
+
+                                    }*/
 
                                     postList.add(listData);
                                 }
-                                ActivityAdapter  adapter=new ActivityAdapter(getActivity(),postList);
+                                adapter=new ActivityAdapter(getActivity(),postList);
                                 recyclerView.setAdapter(adapter);
+
+                                recyclerView.post(new Runnable()
+                                {
+                                    @Override
+                                    public void run() {
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                });
 
                             }
 

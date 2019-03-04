@@ -1,12 +1,16 @@
 package brenda.com.showoff.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import brenda.com.showoff.R;
 import brenda.com.showoff.Util.Validator;
@@ -30,7 +34,8 @@ public class SignupPersonalDetails extends AppCompatActivity implements View.OnC
     @BindView(R.id.back_button)
     ImageView backButton;
 
-    private String fName,lName,userName,email,password;
+    @BindView(R.id.total_rl)
+    RelativeLayout mainLayout;
 
 
     @Override
@@ -43,6 +48,12 @@ public class SignupPersonalDetails extends AppCompatActivity implements View.OnC
         nextButton.setOnClickListener(this);
         backButton.setOnClickListener(this);
 
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert imm != null;
+        imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
     }
 
     @Override
@@ -50,11 +61,11 @@ public class SignupPersonalDetails extends AppCompatActivity implements View.OnC
         switch (view.getId()){
 
             case R.id.next_button:
-                fName = etfirstName.getText().toString();
-                lName = etlastName.getText().toString();
-                userName = etuserName.getText().toString();
-                email = etEmail.getText().toString();
-                password = etPassword.getText().toString();
+                String fName = etfirstName.getText().toString();
+                String lName = etlastName.getText().toString();
+                String userName = etuserName.getText().toString();
+                String email = etEmail.getText().toString();
+                String password = etPassword.getText().toString();
 
                 if (!Validator.isValidName(fName) || !Validator.isValidName(lName) || !Validator.isValidName(userName) || !Validator.isValidEmail(email) || !Validator.isValidPassword(password)){
                     etfirstName.setError("Invalid Name");

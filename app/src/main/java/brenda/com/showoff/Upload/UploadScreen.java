@@ -7,12 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.PermissionRequest;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -100,16 +102,16 @@ public class UploadScreen extends Fragment implements EasyPermissions.Permission
     private Uri uri;
     private String pathToStoredVideo;
     private String utoken;
+    private EditText etDesc;
 
     public UploadScreen() {
         // Required empty public constructor
     }
 
-    public static UploadScreen newInstance(String param1, String param2) {
+    public static UploadScreen newInstance() {
         UploadScreen fragment = new UploadScreen();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -127,11 +129,11 @@ public class UploadScreen extends Fragment implements EasyPermissions.Permission
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-         View view = inflater.inflate(R.layout.fragment_upload_screen, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_upload_screen, container, false);
+         etDesc = view.findViewById(R.id.postdesc);
         SharedPreferences tokenpref = getActivity().getSharedPreferences("login",MODE_PRIVATE);
         utoken = tokenpref.getString("token","");
-
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         if (!CameraUtils.isDeviceSupportCamera(getContext())) {
             Toast.makeText(getContext(),
                     "Sorry! Your device doesn't support camera",
@@ -174,6 +176,7 @@ public class UploadScreen extends Fragment implements EasyPermissions.Permission
                 actionId=2;
 
                 Intent videoCaptureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                videoCaptureIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
                 if(videoCaptureIntent.resolveActivity(getActivity().getPackageManager()) != null){
                     startActivityForResult(videoCaptureIntent, REQUEST_VIDEO_CAPTURE);
                 }
@@ -195,9 +198,13 @@ public class UploadScreen extends Fragment implements EasyPermissions.Permission
                 if (actionId==2){
 
                     uploadVideoToServer(pathToStoredVideo);
-                    Toast.makeText(getContext(),"Upload video",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(),"Upload video",Toast.LENGTH_LONG).show();
                 }
                 else if (actionId==1){
+
+                    callImageApi();
+                }
+                else if (actionId==3){
 
                     callImageApi();
                 }
@@ -360,16 +367,37 @@ public class UploadScreen extends Fragment implements EasyPermissions.Permission
             //TODO: action
             Uri uri = data.getData();
 
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                // Log.d(TAG, String.valueOf(bitmap));
-                txtDescription.setVisibility(View.GONE);
-                videoPreview.setVisibility(View.GONE);
+            if (uri!=null){
 
-                imgPreview.setVisibility(View.VISIBLE);
-                imgPreview.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream .toByteArray();
+                    encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    // Log.d(TAG, String.valueOf(bitmap));
+                    txtDescription.setVisibility(View.GONE);
+                    videoPreview.setVisibility(View.GONE);
+                    btnPickImg.setVisibility(View.GONE);
+                    btnCapturePicture.setVisibility(View.GONE);
+                    btnRecordVideo.setVisibility(View.GONE);
+                    btnUpload.setVisibility(View.VISIBLE);
+                    imgPreview.setVisibility(View.VISIBLE);
+                    imgPreview.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        }
+
+        if (resultCode == RESULT_OK && data.getData() != null) {
+            String path = data.getData().getPath();
+            if (path.contains("/video/")) {
+                Log.d(this.getClass().getName(), "Video");
+            } else if (path.contains("/images/")) {
+                Log.d(this.getClass().getName(), "Image");
             }
         }
     }
@@ -481,13 +509,14 @@ public class UploadScreen extends Fragment implements EasyPermissions.Permission
         File videoFile = new File(pathToVideoFile);
         RequestBody videoBody = RequestBody.create(MediaType.parse("video/*"), videoFile);
         RequestBody tokenBody = RequestBody.create(MediaType.parse("token"), utoken);
+        RequestBody postdesc = RequestBody.create(MediaType.parse("post_description"), "wow!!!!");
         MultipartBody.Part vFile = MultipartBody.Part.createFormData("showoff", videoFile.getName(), videoBody);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ApiUrl.baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         VideoInterface vInterface = retrofit.create(VideoInterface.class);
-        Call<ResultObject> serverCom = vInterface.uploadVideoToServer(vFile,tokenBody);
+        Call<ResultObject> serverCom = vInterface.uploadVideoToServer(vFile,tokenBody,postdesc);
         serverCom.enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -523,11 +552,11 @@ public class UploadScreen extends Fragment implements EasyPermissions.Permission
     private void callImageApi(){
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Loging...");
+        progressDialog.setMessage("Uploading Image...");
         progressDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiUrl.baseUrl + ApiUrl.uploadImage + ".php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiUrl.baseUrl + ApiUrl.uploadImage,
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

@@ -1,24 +1,42 @@
 package brenda.com.showoff;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
-
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
 import brenda.com.showoff.Home.Home;
+import brenda.com.showoff.Home.HomeScreen;
 import brenda.com.showoff.SignUp.Login;
 import brenda.com.showoff.Upload.RecordVideo;
 import brenda.com.showoff.Upload.Upload;
 import brenda.com.showoff.Upload.UploadScreen;
 import brenda.com.showoff.Util.Util;
+import brenda.com.showoff.activity.ActivityAdapter;
+import brenda.com.showoff.activity.ActivityModel;
 import brenda.com.showoff.activity.ActivityScreen;
+import brenda.com.showoff.apis.ApiUrl;
 import brenda.com.showoff.settings.Settings;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     FragmentTransaction ft;
     Fragment fragment;
     AHBottomNavigation.OnTabSelectedListener my_lis;
-
+    private String utoken;
     // Activity request codes
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     private static final int CAMERA_CAPTURE_VIDEO_REQUEST_CODE = 200;
@@ -55,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
     public static final String IMAGE_EXTENSION = "jpg";
     public static final String VIDEO_EXTENSION = "mp4";
 
+    AHBottomNavigation ahBottomNavigation;
+
+    boolean notificationVisible = false;
+
     private static String imageStoragePath;
 
     @Override
@@ -62,15 +84,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         //Initialize the variables.
         mMyApp = (AppController) this.getApplicationContext();
         base_layout = findViewById(R.id.base_layout);
 
-        SharedPreferences sharedpreferences = getSharedPreferences("pushshared",MODE_PRIVATE);
-
+        SharedPreferences sharedpreferences = getSharedPreferences("MyPrefs",MODE_PRIVATE);
+        SharedPreferences tokenpref = getSharedPreferences("login",MODE_PRIVATE);
+        utoken = tokenpref.getString("token","");
         push_id = sharedpreferences.getString("pushid","");
 
-        Toast.makeText(getApplicationContext(),push_id,Toast.LENGTH_LONG).show();
 
         //Check for active internet connection
         Boolean connected = Util.isOnline(MainActivity.this);
@@ -81,137 +105,162 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
 
         } else {
-
+            ahBottomNavigation = findViewById(R.id.navigation);
             // Initialize shared preferences.
             sharedPreferences = this.getApplicationContext().getSharedPreferences(PREFS_SHOWOFF, 0);
+            AHBottomNavigationItem home = new AHBottomNavigationItem(R.string.home, R.drawable.home, R.color.colorPink);
+            AHBottomNavigationItem search = new AHBottomNavigationItem(R.string.search, R.drawable.magnifying_glass, R.color.colorPink);
+            AHBottomNavigationItem upload = new AHBottomNavigationItem(R.string.upload, R.drawable.ccamera, R.color.colorPink);
+            AHBottomNavigationItem activity = new AHBottomNavigationItem(R.string.activity_text, R.drawable.activity, R.color.colorPink);
+            AHBottomNavigationItem settings = new AHBottomNavigationItem(R.string.settings, R.drawable.settings, R.color.colorPink);
+            ahBottomNavigation.addItem(home);
+            ahBottomNavigation.addItem(search);
+            ahBottomNavigation.addItem(upload);
+            ahBottomNavigation.addItem(activity);
+            ahBottomNavigation.addItem(settings);
+            ahBottomNavigation.setTranslucentNavigationEnabled(true);
 
-            //Initialize the bottom bar.
-            int[] tabColors = getApplicationContext().getResources().getIntArray(R.array.tabColors);
-            AHBottomNavigation ahBottomNavigation = findViewById(R.id.navigation);
             ahBottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-            ahBottomNavigation.setDefaultBackgroundColor(Color.parseColor("#3b97d3"));
-            AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.my_navigation_items);
-            navigationAdapter.setupWithBottomNavigation(ahBottomNavigation, tabColors);
-            ahBottomNavigation.setInactiveColor(Color.parseColor("#ffffff"));
-            ahBottomNavigation.setAccentColor(Color.parseColor("#fe5c97"));
+            ahBottomNavigation.setDefaultBackgroundColor(ContextCompat.getColor(this, R.color.colorBlueText));
+            ahBottomNavigation.setAccentColor(ContextCompat.getColor(this, R.color.colorPink));
+            ahBottomNavigation.setInactiveColor(ContextCompat.getColor(this, R.color.colorWhite));
+            ahBottomNavigation.setCurrentItem(0);
+            loadFragment(HomeScreen.newInstance());
 
-
-
-
-
-
-            my_lis = new AHBottomNavigation.OnTabSelectedListener() {
+            ahBottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
                 @Override
                 public boolean onTabSelected(int position, boolean wasSelected) {
-
-                    String tag = "";
                     switch (position) {
                         case 0:
-
-                            fragment = new Home();
-                            ft = getFragmentManager().beginTransaction(); //Initialize the fragment manager and begin the transaction.
-                            //ft.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left); //Set the animation.
-                            ft.replace(R.id.base_layout, fragment, "home"); //Replace the main activity base layout with the fragment.
-                            ft.addToBackStack(null);
-                            ft.commit(); //Commit the transaction.
-                            return true;
-
+                            loadFragment(HomeScreen.newInstance());
+                            break;
                         case 1:
-
-//                            fragment = new LiveContestFragment();
-//                            tag = "live_contest";
-//                            ft = getFragmentManager().beginTransaction(); //Initialize the fragment manager and begin the transaction.
-//                            ft.replace(R.id.base_layout, fragment, tag); //Replace the main activity base layout with the fragment.
-//                            ft.addToBackStack(null);
-//                            ft.commit(); //Commit the transaction.
-//                            return true;
-                        //break;
-
+                            //loadFragment(MyContestFragment.newInstance());
+                            break;
                         case 2:
-
-                            fragment = new UploadScreen();
-                            ft = getFragmentManager().beginTransaction(); //Initialize the fragment manager and begin the transaction.
-                            ft.replace(R.id.base_layout, fragment, "upload"); //Replace the main activity base layout with the fragment.
-                            ft.addToBackStack(null);
-                            ft.commit(); //Commit the transaction.
-                            return true;
-
-                        // break;
-
+                            loadFragment(UploadScreen.newInstance());
+                            Log.d("user_token","clicked");
+                            break;
                         case 3:
+                            loadFragment(ActivityScreen.newInstance());
+                            break;
+                        default:
+                            loadFragment(Settings.newInstance());
+                            break;
 
-                            fragment = new ActivityScreen();
-                            tag = "upcoming_contest";
-                            ft = getFragmentManager().beginTransaction(); //Initialize the fragment manager and begin the transaction.
-                            ft.replace(R.id.base_layout, fragment, tag); //Replace the main activity base layout with the fragment.
-                            ft.addToBackStack(null);
-                            ft.commit(); //Commit the transaction.
-                            return true;
-
-                        case 4:
-
-                            fragment = new Settings();
-                            tag = "upcoming_contest";
-                            ft = getFragmentManager().beginTransaction(); //Initialize the fragment manager and begin the transaction.
-                            ft.replace(R.id.base_layout, fragment, tag); //Replace the main activity base layout with the fragment.
-                            ft.addToBackStack(null);
-                            ft.commit(); //Commit the transaction.
-
-//                            fragment = new HistoryFragment();
-//                            tag = "history_fragment";
-//                            ft = getFragmentManager().beginTransaction(); //Initialize the fragment manager and begin the transaction.
-//                            ft.replace(R.id.base_layout, fragment, tag); //Replace the main activity base layout with the fragment.
-//                            ft.addToBackStack(null);
-//                            ft.commit(); //Commit the transaction.
-//                            return true;
-                        //break;
                     }
-
                     return true;
                 }
-            };
-
-            ahBottomNavigation.setOnTabSelectedListener(my_lis);
+            });
 
 
-
-            // Make sure shared preferences contains token.
-            try {
+            /*try {
                 if (sharedPreferences.contains("user_token")) {
 
                     // Retrieve the string.
                     user_token = sharedPreferences.getString("user_token", "0");
 
-                    //System.out.println("user token" + user_token);
-
-//                    Fragment error_layout = new ErrorLayout();
-//                    FragmentTransaction ft_signup = getFragmentManager().beginTransaction(); //Initialize the fragment manager and begin the transaction.
-//                    ft_signup.replace(R.id.base_layout, error_layout, "error_layout"); //Replace the main activity base layout with the fragment.
-//                    ft_signup.addToBackStack(null);
-//                    ft_signup.commit(); //Commit the transaction.
 
 
                 } else {
 
+                    loadFragment(HomeScreen.newInstance());
 
-                    Fragment upload = new UploadScreen();
-                    FragmentTransaction ft_signup = getFragmentManager().beginTransaction(); //Initialize the fragment manager and begin the transaction.
-                    ft_signup.replace(R.id.base_layout, upload, "upload"); //Replace the main activity base layout with the fragment.
-                    ft_signup.addToBackStack(null);
-                    ft_signup.commit(); //Commit the transaction.
                 }
 
-//                    Fragment login = new Login();
-//                    FragmentTransaction ft_signup = getFragmentManager().beginTransaction(); //Initialize the fragment manager and begin the transaction.
-//                    ft_signup.replace(R.id.base_layout, login, "login"); //Replace the main activity base layout with the fragment.
-//                    ft_signup.addToBackStack(null);
-//                    ft_signup.commit(); //Commit the transaction.
-//                }
 
             } catch (Exception e) {
 
-            }
+            }*/
 
         }
+    }
+
+    private void loadFragment(Fragment fragment) {
+        // load fragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.base_layout, fragment);
+        transaction.commitNow();
+    }
+
+    private void createFakeNotification() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AHNotification notification = new AHNotification.Builder()
+                        .setText("1")
+                        .setBackgroundColor(Color.YELLOW)
+                        .setTextColor(Color.BLACK)
+                        .build();
+                // Adding notification to last item.
+                ahBottomNavigation.setNotification(notification, ahBottomNavigation.getItemsCount() - 2);
+                notificationVisible = true;
+            }
+        }, 1000);
+    }
+
+    @Override
+
+    public void onResume() {
+        super.onResume();
+
+        getActivityCount();
+        //createFakeNotification();
+    }
+
+    private void getActivityCount(){
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiUrl.baseUrl + ApiUrl.activityCount,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+
+                            String status = jsonObject.getString("success");
+                            if (status.matches("1")){
+
+                                final String totalCount = jsonObject.getString("total_count");
+
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        AHNotification notification = new AHNotification.Builder()
+                                                .setText(totalCount)
+                                                .setBackgroundColor(Color.YELLOW)
+                                                .setTextColor(Color.BLACK)
+                                                .build();
+                                        // Adding notification to last item.
+                                        ahBottomNavigation.setNotification(notification, ahBottomNavigation.getItemsCount() - 2);
+                                        notificationVisible = true;
+                                    }
+                                }, 1000);
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new com.android.volley.Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", utoken);
+
+
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
     }
 }

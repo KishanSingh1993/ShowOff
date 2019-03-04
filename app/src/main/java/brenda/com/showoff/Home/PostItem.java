@@ -3,12 +3,15 @@ package brenda.com.showoff.Home;
 public class PostItem {
 
     // Declare all the variables to store the game data.
-    private String post_id;
+    public String post_id;
     public String post_url;
-    private String post_username;
+    public String post_username;
     private String post_role;
     private String post_upvotes;
-    private String post_comments;
+    public String post_comments;
+    private String type;
+    private String desc;
+    private String timestamp;
 
     public PostItem(String post_id, String post_url, String post_username, String post_role, String post_upvotes, String post_comments) {
         this.post_id = post_id;
@@ -75,5 +78,29 @@ public class PostItem {
 
     public void setPost_comments(String post_comments) {
         this.post_comments = post_comments;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }

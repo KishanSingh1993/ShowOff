@@ -10,5 +10,5 @@ import retrofit2.http.Part;
 public interface VideoInterface {
     @Multipart
     @POST("upload_video_file.php")
-    Call<ResultObject> uploadVideoToServer(@Part MultipartBody.Part video, @Part("token") RequestBody description);
+    Call<ResultObject> uploadVideoToServer(@Part MultipartBody.Part video, @Part("token") RequestBody description,@Part("post_description") RequestBody postdescription);
 }

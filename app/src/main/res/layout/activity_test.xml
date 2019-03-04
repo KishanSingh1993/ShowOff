@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,48 +7,189 @@
     tools:context=".Home.VideoFullScreen">
 
     <RelativeLayout
-        android:id="@+id/title_bar_layout"
+
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:background="@color/colorBlueText"
+        android:layout_height="wrap_content"
         >
 
         <RelativeLayout
-            android:id="@+id/back_button_overlay"
-            android:layout_width="40dp"
-            android:layout_height="45dp"
-            android:layout_centerVertical="true"
-            android:gravity="center">
+            android:id="@+id/title_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/colorWhite"
+            >
 
-            <ImageView
-                android:id="@+id/back_button"
-                android:layout_width="17dp"
-                android:layout_height="17dp"
-                android:layout_marginStart="15dp"
-                app:srcCompat="@drawable/white_arrow" />
+            <RelativeLayout
+                android:id="@+id/back_button_overlay"
+                android:layout_width="40dp"
+                android:layout_height="45dp"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+
+                <brenda.com.showoff.Util.RoundedImageView
+                    android:id="@+id/user_rounded_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/entrant_profile_pic"
+                    android:visibility="visible" />
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/sign_up_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="55dp"
+                android:text="User Name"
+                android:textAllCaps="true"
+                android:textColor="@color/colorBlack"
+                android:textSize="17sp" />
 
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/sign_up_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="My Post"
-            android:textAllCaps="true"
-            android:textColor="@color/colorWhite"
-            android:textSize="17sp" />
-
-
-    </RelativeLayout>
-
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/thumbnail1"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="200dp"
         android:layout_below="@+id/title_bar_layout"
         android:layout_margin="10dp"
+        android:background="@color/colorBlack"
          />
 
+    <TextView
+        android:id="@+id/postdesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:textSize="18sp"
+        android:paddingLeft="10dp"
+        android:layout_below="@id/thumbnail1"
+        android:textColor="@color/colorBlack"
+        />
+
+    <ImageView
+        android:id="@+id/upvote"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/postdesc"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="65dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/thumbs_up"
+        android:gravity="center"
+        android:textColor="@color/colorBlack"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/downvote"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/postdesc"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="65dp"
+        android:background="@drawable/thumb_down"
+        android:gravity="center"
+        android:textColor="@color/colorBlack" />
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/upvote"
+        android:weightSum="2"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal"
+        android:id="@+id/ll1"
+        >
+
+        <TextView
+            android:id="@+id/upvote1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:textColor="@color/colorBlack"
+            />
+
+        <TextView
+            android:id="@+id/downvote1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:textColor="@color/colorBlack"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/cmnt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_below="@id/ll2"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="5dp"
+        android:autoLink="web"
+        android:linksClickable="true"
+        android:textColor="@color/colorBlack"
+        />
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll1"
+        android:id="@+id/ll2"
+        >
+
+        <EditText
+            android:id="@+id/addcmnt"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/custom_border_withdrawal"
+            android:ems="10"
+            android:paddingLeft="5dp"
+            android:inputType="textMultiLine|textCapSentences"
+            android:hint="@string/add_comment" />
+
+        <Button
+            android:id="@+id/postcmnt"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/addcmnt"
+            android:layout_alignEnd="@+id/addcmnt"
+            android:background="@drawable/button_bg"
+            android:foreground="@drawable/custom_ripple_rounded_rect"
+            android:text="@string/post"
+            android:textColor="@color/colorWhite"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_view"
+            android:layout_below="@+id/cmnt"
+            android:layout_margin="10dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
 </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

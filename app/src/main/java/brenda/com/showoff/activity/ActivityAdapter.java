@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,27 +48,31 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.MyView
     private Context context;
     FragmentManager mFragmentManager;
     android.app.FragmentTransaction mFragmentTransaction;
+    private String userId;
+    private View view;
+    private MediaPlayer mediaPlayer;
 
 
-    public ActivityAdapter(Context context, ArrayList<ActivityModel> movieList) {
+    ActivityAdapter(Context context, ArrayList<ActivityModel> movieList) {
 
         this.dataSet = movieList;
     }
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewName,upvote;
         ImageView postImage;
         VideoView videoView;
+        LinearLayout linearLayout;
 
 
-
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
             this.textViewName =  itemView.findViewById(R.id.name);
             this.postImage = itemView.findViewById(R.id.imageView);
             this.videoView = itemView.findViewById(R.id.video);
+            this.linearLayout = itemView.findViewById(R.id.ll);
             //this.upvote =  itemView.findViewById(R.id.type);
 
 
@@ -78,10 +83,11 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.MyView
         this.dataSet = data;
     }
 
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent,
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                            int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.activity_item_list, parent, false);
 
 
@@ -94,34 +100,51 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, int i) {
 
-        TextView textViewName;
-        //ImageView postImage = null;
+
 
         String upVoteData = dataSet.get(i).getUpvote();
 
         String imgurl = dataSet.get(i).getImgurl();
 
+        userId = dataSet.get(i).getUserId();
+
+
         MediaController mediaController= new MediaController(context);
         mediaController.setAnchorView(myViewHolder.videoView);
 
+        if (userId.matches("6")){
+
+            //removeAt(i);
+        }
+
         if (imgurl.endsWith(".mp4")){
+            myViewHolder.postImage.setVisibility(View.INVISIBLE);
+            myViewHolder.videoView.setVisibility(View.VISIBLE);
             Uri video = Uri.parse(imgurl);
             myViewHolder.videoView.setVideoURI(video);
-            myViewHolder.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.setLooping(true);
-                myViewHolder.videoView.start();
-            }
-        });
+            myViewHolder.videoView.seekTo( 1 );
+//            myViewHolder.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                mp.setLooping(true);
+//                mp.setVolume(0,0);
+//                //myViewHolder.videoView.start();
+//
+//            }
+//        });
 
         }
+        else if(imgurl.endsWith(".png")){
+            //myViewHolder.videoView.setVisibility(View.INVISIBLE);
+            Picasso.with(context)
+                    .load(imgurl)
+                    .into(myViewHolder.postImage);        }
 
         if (upVoteData.matches("1")){
             SpannableStringBuilder builder = new SpannableStringBuilder();
             //myViewHolder.upvote.setText(R.string.upvoted_text);
             String name = dataSet.get(i).getFname();
-            String up = "Up voted your post";
+            String up = "Up voted your post.";
             String blank = " ";
 
             SpannableString redSpannable= new SpannableString(name);
@@ -141,7 +164,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.MyView
             SpannableStringBuilder builder = new SpannableStringBuilder();
             //myViewHolder.upvote.setText(R.string.downvoted_text);
             String name = dataSet.get(i).getFname();
-            String up = "Down voted your post";
+            String up = "Down voted your post.";
             String blank = " ";
 
             SpannableString redSpannable= new SpannableString(name);
@@ -190,12 +213,17 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.MyView
 
     }
 
+
     @Override
     public int getItemCount() {
         return dataSet.size();
     }
 
 
-
+    private void removeAt(int position) {
+        dataSet.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, dataSet.size());
+    }
 }
 

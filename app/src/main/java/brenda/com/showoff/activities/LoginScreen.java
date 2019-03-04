@@ -4,11 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -45,10 +50,14 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     @BindView(R.id.sign_up_button)
     Button signUp;
 
+    @BindView(R.id.rl)
+    RelativeLayout mainLayout;
+
     private String userEmail,userPassword;
 
     private static final String LoginPref = "login" ;
     private static final String logintoken = "token";
+    private static final String email = "email";
 
     SharedPreferences sharedpreferences;
 
@@ -60,11 +69,23 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
 
         ButterKnife.bind(this);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         signUp.setOnClickListener(this);
+
         signIn.setOnClickListener(this);
 
         sharedpreferences = getSharedPreferences(LoginPref, Context.MODE_PRIVATE);
 
+        if (sharedpreferences!=null){
+
+            String token = sharedpreferences.getString("token","");
+
+            if (!token.matches("")){
+
+                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            }
+        }
     }
 
     @Override
@@ -72,11 +93,13 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         switch (view.getId()){
 
             case R.id.sign_in_button:
+
                 userEmail = etEmail.getText().toString();
                 userPassword = etPassword.getText().toString();
                 if (!Validator.isValidEmail(userEmail) || !Validator.isValidPassword(userPassword)){
 
-                    Toast.makeText(getApplicationContext(),"Something went wrong",Toast.LENGTH_LONG).show();
+                    etEmail.setError("Please enter a valid email");
+                    etPassword.setError("Invalid Password");
 
                 }else {
 
@@ -87,6 +110,9 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             case R.id.sign_up_button:
 
                 startActivity(new Intent(getApplicationContext(),SignupPersonalDetails.class));
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert imm != null;
+                imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
 
                 break;
 
@@ -96,11 +122,11 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     private void callLoginApi(final String email, final String password){
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginScreen.this);
-        progressDialog.setMessage("Loging...");
+        progressDialog.setMessage("Logging in..please wait");
         progressDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiUrl.baseUrl+ApiUrl.login+".php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiUrl.baseUrl+ApiUrl.login,
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

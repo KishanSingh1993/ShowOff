@@ -1,17 +1,26 @@
 package brenda.com.showoff.settings;
 
+import android.annotation.SuppressLint;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import brenda.com.showoff.R;
+import brenda.com.showoff.Upload.UploadScreen;
+import brenda.com.showoff.activities.LoginScreen;
+import brenda.com.showoff.changepassword.ChangePassword;
 
 
-public class Settings extends Fragment {
+public class Settings extends Fragment implements View.OnClickListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -22,15 +31,15 @@ public class Settings extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private SharedPreferences sharedpreferences;
+
     public Settings() {
         // Required empty public constructor
     }
 
-    public static Settings newInstance(String param1, String param2) {
+    public static Settings newInstance() {
         Settings fragment = new Settings();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,7 +57,22 @@ public class Settings extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        Button logoutButton = view.findViewById(R.id.logout);
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        Button changePassword = view.findViewById(R.id.changepassword);
+
+        changePassword.setOnClickListener(this);
+
+        logoutButton.setOnClickListener(this);
+
+        sharedpreferences = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -62,6 +86,29 @@ public class Settings extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()){
+
+            case R.id.changepassword:
+                Fragment changepass = new ChangePassword();
+                FragmentTransaction ft_signup = getActivity().getSupportFragmentManager().beginTransaction();
+                ft_signup.replace(R.id.base_layout, changepass, "change");
+                ft_signup.addToBackStack(null);
+                ft_signup.commit();
+                break;
+
+            case R.id.logout:
+                @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.clear();
+                editor.putString("token", "");
+                editor.apply();
+                startActivity(new Intent(getContext(), LoginScreen.class));
+                break;
+
+        }
     }
 
 
